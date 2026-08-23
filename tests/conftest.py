@@ -1,10 +1,8 @@
 import pytest
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from sqlalchemy.orm import sessionmaker
+from app.database import Base
 import app.models
-
-class Base(DeclarativeBase):
-    pass
 
 TEST_DATABASE_URL = "sqlite:///:memory:"
 
@@ -20,7 +18,7 @@ TestingSessionLocal = sessionmaker(
 )
 
 @pytest.fixture
-def db():
+def db():   
     Base.metadata.create_all(bind=engine)
 
     db = TestingSessionLocal()

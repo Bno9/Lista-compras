@@ -6,9 +6,10 @@ from app.database import Base
 
 class Categorias(Base):
     __tablename__ = "categorias"
+    
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(100))
 
-    produtos: Mapped[List["Produtos"]] = relationship(
+    produto: Mapped[List["Produtos"]] = relationship(
         back_populates="categoria"
     )

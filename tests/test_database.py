@@ -6,7 +6,7 @@ def test_database(db):
     assert db is not None
 
 def test_criar_categoria(db):
-    categoria = Categorias(nome="Ferramentas")
+    categoria = Categorias(name="Ferramentas")
 
     db.add(categoria)
     db.commit()
@@ -16,26 +16,26 @@ def test_criar_categoria(db):
     assert categoria.nome == "Ferramentas"
 
 def test_buscar_categoria(db):
-    categoria = Categorias(nome="Ferramentas")
+    categoria = Categorias(name="Ferramentas")
 
     db.add(categoria)
     db.commit()
 
     resultado = db.query(Categorias).filter(
-        Categorias.nome == "Ferramentas"
+        Categorias.name == "Ferramentas"
     ).first()
 
     assert resultado is not None
-    assert resultado.nome == "Ferramentas"
+    assert resultado.name == "Ferramentas"
 
 def test_remover_categoria(db):
-    categoria = Categorias(nome="Ferramentas")
+    categoria = Categorias(name="Ferramentas")
 
     db.add(categoria)
     db.commit()
 
     resultado = db.query(Categorias).filter(
-        Categorias.nome == "Ferramentas"
+        Categorias.name == "Ferramentas"
     ).first()
 
     assert resultado is not None
@@ -44,18 +44,18 @@ def test_remover_categoria(db):
     db.commit()
 
     resultado = db.query(Categorias).filter(
-        Categorias.nome == "Ferramentas"
+        Categorias.name == "Ferramentas"
     ).first()
 
     assert resultado is None
 
 def test_criar_produto(db):
-    categoria = Categorias(nome="Ferramentas")
+    categoria = Categorias(name="Ferramentas")
     db.add(categoria)
     db.commit()
 
     produto = Produtos(
-        nome="Alicate",
+        name="Alicate",
         categoria_id=categoria.id
     )
 
@@ -64,16 +64,16 @@ def test_criar_produto(db):
     db.refresh(produto)
 
     assert produto.id is not None
-    assert produto.nome == "Alicate"
+    assert produto.name == "Alicate"
     assert produto.categoria_id == categoria.id
 
 def test_relacionamento_produto_categoria(db):
-    categoria = Categorias(nome="Ferramentas")
+    categoria = Categorias(name="Ferramentas")
     db.add(categoria)
     db.commit()
 
     produto = Produtos(
-        nome="Alicate",
+        name="Alicate",
         categoria_id=categoria.id
     )
 
@@ -82,15 +82,15 @@ def test_relacionamento_produto_categoria(db):
     db.refresh(produto)
 
     assert produto.categoria.id == categoria.id
-    assert produto.categoria.nome == "Ferramentas"
+    assert produto.categoria.name == "Ferramentas"
 
 def test_produtos_da_categoria(db):
-    categoria = Categorias(nome="Ferramentas")
+    categoria = Categorias(name="Ferramentas")
     db.add(categoria)
     db.commit()
 
     produto = Produtos(
-        nome="Alicate",
+        name="Alicate",
         categoria_id=categoria.id
     )
 
@@ -100,4 +100,4 @@ def test_produtos_da_categoria(db):
     db.refresh(categoria)
 
     assert len(categoria.produtos) == 1
-    assert categoria.produtos[0].nome == "Alicate"
+    assert categoria.produtos[0].name == "Alicate"
