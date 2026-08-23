@@ -5,7 +5,7 @@ import os
 
 dotenv.load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///:memory:")
 
 class Base(DeclarativeBase):
     pass
@@ -17,3 +17,10 @@ SessionLocal = sessionmaker(
     autoflush=False,
     bind=engine
 )
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

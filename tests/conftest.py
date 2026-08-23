@@ -1,10 +1,10 @@
 import pytest
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from app.database import Base, engine
+from sqlalchemy.orm import sessionmaker, DeclarativeBase
 import app.models
 
-from app.database import Base
+class Base(DeclarativeBase):
+    pass
 
 TEST_DATABASE_URL = "sqlite:///:memory:"
 
