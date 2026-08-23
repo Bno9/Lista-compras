@@ -11,7 +11,6 @@ class CategoriaCreate(BaseModel):
 class ProdutoCreate(BaseModel):
     name: str
     categoria: str
-    categoria_id: int = None  # Campo opcional para compatibilidade com testes
 
 app = FastAPI()
 
@@ -19,7 +18,7 @@ app = FastAPI()
 def read_root():
     return {"message": "Hello, World!"}
 
-@app.post("/produtos")
+@app.post("/produtos", status_code=201)
 def criar_produto(produto: ProdutoCreate, db: Session = Depends(get_db)):
 
     categoria_obj = db.query(Categorias).filter(Categorias.name == produto.categoria).first()
@@ -31,7 +30,7 @@ def criar_produto(produto: ProdutoCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(produto)
 
-    return {"detail": f"Produto '{produto.name}' criado com sucesso na categoria '{categoria_obj.name}'."}
+    return {"name": produto.name, 'categoria': categoria_obj.name, "id": produto.id}
 
 @app.delete("/produtos/{produto_id}")
 def excluir_produto(produto_id: int, db: Session = Depends(get_db)):
@@ -65,7 +64,7 @@ def buscar_produto_por_nome(nome: str, db: Session = Depends(get_db)):
 
 # Endpoints para categorias
 
-@app.post("/categorias")
+@app.post("/categorias", status_code=201)
 def criar_categoria(categoria: CategoriaCreate, db: Session = Depends(get_db)):
     categoria = Categorias(name=categoria.name)
     db.add(categoria)
@@ -82,7 +81,7 @@ def excluir_categoria(categoria_name: str, db: Session = Depends(get_db)):
 
     produtos_associados = db.query(Produtos).filter(Produtos.categoria_id == categoria.id).all()
     if produtos_associados:
-        raise HTTPException(status_code=400, detail="Não é possível deletar a categoria pois existem produtos associados a ela.")
+        raise HTTPException(status_code=400, detail="Não é possível deletar uma categoria que possui produtos")
 
     db.delete(categoria)
     db.commit()
@@ -98,3 +97,12 @@ def listar_categorias(db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Nenhuma categoria encontrada")
 
     return [{"id": categoria.id, "nome": categoria.name} for categoria in categorias]
+
+@app.get("/categorias/{nome}")
+def buscar_categoria_por_nome(nome: str, db: Session = Depends(get_db)):
+    categoria = db.query(Categorias).filter(Categorias.name == nome).first()
+    
+    if not categoria:
+        raise HTTPException(status_code=404, detail="Categoria não encontrada")
+
+    return {"id": categoria.id, "nome": categoria.name}

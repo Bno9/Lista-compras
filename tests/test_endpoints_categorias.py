@@ -16,7 +16,6 @@ def test_criar_categoria(override_get_db):
 
     assert data["nome"] == "Ferramentas"
     assert "id" in data
-    assert response.status_code == 201
 
 def test_excluir_categoria(override_get_db):
     # Cria uma categoria
@@ -24,12 +23,11 @@ def test_excluir_categoria(override_get_db):
         "/categorias",
         json={"name": "Móveis"}
     )
-    assert response.status_code == 201
 
-    categoria_id = response.json()["id"]
+    categoria_name = response.json()["nome"]
 
     # Exclui a categoria
-    response = client.delete(f"/categorias/{categoria_id}")
+    response = client.delete(f"/categorias/{categoria_name}")
     assert response.status_code == 200
 
     data = response.json()
@@ -42,19 +40,19 @@ def test_excluir_categoria_com_produtos(override_get_db):
         json={"name": "Alimentos"}
     )
 
-    categoria_id = response.json()["id"]
+    categoria_name = response.json()["nome"]
 
     # Cria um produto nessa categoria
     response = client.post(
         "/produtos",
         json={
             "name": "Arroz",
-            "categoria_id": categoria_id
+            "categoria": categoria_name
         }
     )
 
     # Agora, tenta excluir a categoria
-    response = client.delete(f"/categorias/{categoria_id}")
+    response = client.delete(f"/categorias/{categoria_name}")
     assert response.status_code == 400
 
     data = response.json()

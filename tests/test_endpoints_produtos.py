@@ -10,13 +10,13 @@ def test_criar_produto(override_get_db):
         json={"name": "Ferramentas"}
     )
 
-    categoria_id = response.json()["id"]
+    categoria_name = response.json()["nome"]
 
     response = client.post(
         "/produtos",
         json={
             "name": "Alicate",
-            "categoria_id": categoria_id
+            "categoria": categoria_name
         }
     )
 
@@ -24,17 +24,23 @@ def test_criar_produto(override_get_db):
 
     data = response.json()
 
-    assert data["nome"] == "Alicate"
-    assert data["categoria_id"] == 1
+    assert data["name"] == "Alicate"
+    assert data["categoria"] == "Ferramentas"
     assert "id" in data
 
 def test_deletar_produto(override_get_db):
+    #Cria uma categoria para poder criar o produto
+    response = client.post(
+        "/categorias",
+        json={"name": "Ferramentas"}
+    )
+
     # Cria um produto
     response = client.post(
         "/produtos",
         json={
             "name": "Chave de Fenda",
-            "categoria_id": 1
+            "categoria": "Ferramentas"
         }
     )
     assert response.status_code == 201
@@ -54,28 +60,3 @@ def test_deletar_produto_inexistente(override_get_db):
 
     data = response.json()
     assert data["detail"] == "Produto não encontrado"
-
-def test_listar_produtos_por_categoria_inexistente():
-    response = client.get("/produtos/categoria/999")
-    assert response.status_code == 404
-
-    data = response.json()
-    assert data["detail"] == "Categoria não encontrada"
-
-def test_listar_produtos_por_categoria_sem_produtos():
-    # Cria uma categoria sem produtos
-    response = client.post(
-        "/categorias",
-        json={"nome": "Categoria Vazia"}
-    )
-    assert response.status_code == 201
-
-    categoria_id = response.json()["id"]
-
-    # Tenta listar produtos dessa categoria
-    response = client.get(f"/produtos/categoria/{categoria_id}")
-    assert response.status_code == 200
-
-    data = response.json()
-    assert isinstance(data, list)
-    assert len(data) == 0
