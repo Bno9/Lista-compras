@@ -4,12 +4,19 @@ import pytest
 
 client = TestClient(app)
 
-def test_criar_produto():
+def test_criar_produto(override_get_db):
+    response = client.post(
+        "/categorias",
+        json={"name": "Ferramentas"}
+    )
+
+    categoria_id = response.json()["id"]
+
     response = client.post(
         "/produtos",
         json={
-            "nome": "Alicate",
-            "categoria_id": 1
+            "name": "Alicate",
+            "categoria_id": categoria_id
         }
     )
 
@@ -21,12 +28,12 @@ def test_criar_produto():
     assert data["categoria_id"] == 1
     assert "id" in data
 
-def test_deletar_produto():
+def test_deletar_produto(override_get_db):
     # Cria um produto
     response = client.post(
         "/produtos",
         json={
-            "nome": "Chave de Fenda",
+            "name": "Chave de Fenda",
             "categoria_id": 1
         }
     )
@@ -41,7 +48,7 @@ def test_deletar_produto():
     data = response.json()
     assert data["detail"] == "Produto deletado com sucesso"
 
-def test_deletar_produto_inexistente():
+def test_deletar_produto_inexistente(override_get_db):
     response = client.delete("/produtos/999")
     assert response.status_code == 404
 

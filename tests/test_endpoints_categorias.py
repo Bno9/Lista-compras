@@ -4,10 +4,10 @@ import pytest
 
 client = TestClient(app)
 
-def test_criar_categoria():
+def test_criar_categoria(override_get_db):
     response = client.post(
         "/categorias",
-        json={"nome": "Ferramentas"}
+        json={"name": "Ferramentas"}
     )
 
     assert response.status_code == 201
@@ -16,12 +16,13 @@ def test_criar_categoria():
 
     assert data["nome"] == "Ferramentas"
     assert "id" in data
+    assert response.status_code == 201
 
-def test_excluir_categoria():
+def test_excluir_categoria(override_get_db):
     # Cria uma categoria
     response = client.post(
         "/categorias",
-        json={"nome": "Móveis"}
+        json={"name": "Móveis"}
     )
     assert response.status_code == 201
 
@@ -34,13 +35,12 @@ def test_excluir_categoria():
     data = response.json()
     assert data["detail"] == "Categoria deletada com sucesso"
 
-def test_excluir_categoria_com_produtos():
+def test_excluir_categoria_com_produtos(override_get_db):
     # Cria uma categoria
     response = client.post(
         "/categorias",
-        json={"nome": "Alimentos"}
+        json={"name": "Alimentos"}
     )
-    assert response.status_code == 201
 
     categoria_id = response.json()["id"]
 
@@ -48,11 +48,10 @@ def test_excluir_categoria_com_produtos():
     response = client.post(
         "/produtos",
         json={
-            "nome": "Arroz",
+            "name": "Arroz",
             "categoria_id": categoria_id
         }
     )
-    assert response.status_code == 201
 
     # Agora, tenta excluir a categoria
     response = client.delete(f"/categorias/{categoria_id}")

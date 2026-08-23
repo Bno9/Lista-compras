@@ -13,7 +13,7 @@ def test_criar_categoria(db):
     db.refresh(categoria)
 
     assert categoria.id is not None
-    assert categoria.nome == "Ferramentas"
+    assert categoria.name == "Ferramentas"
 
 def test_buscar_categoria(db):
     categoria = Categorias(name="Ferramentas")
@@ -99,5 +99,5 @@ def test_produtos_da_categoria(db):
 
     db.refresh(categoria)
 
-    assert len(categoria.produtos) == 1
-    assert categoria.produtos[0].name == "Alicate"
+    assert len(categoria.produto) == 1
+    assert categoria.produto[0].name == "Alicate"
