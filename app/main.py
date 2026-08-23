@@ -14,14 +14,15 @@ class ProdutoCreate(BaseModel):
 
 app = FastAPI()
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello, World!"}
+
+
+# Endpoints para produtos
 
 @app.post("/produtos", status_code=201)
 def criar_produto(produto: ProdutoCreate, db: Session = Depends(get_db)):
 
     categoria_obj = db.query(Categorias).filter(Categorias.name == produto.categoria).first()
+
     if not categoria_obj:
         raise HTTPException(status_code=404, detail="Categoria não encontrada")
 
@@ -34,14 +35,16 @@ def criar_produto(produto: ProdutoCreate, db: Session = Depends(get_db)):
 
 @app.delete("/produtos/{produto_id}")
 def excluir_produto(produto_id: int, db: Session = Depends(get_db)):
+
     produto = db.query(Produtos).filter(Produtos.id == produto_id).first()
+
     if not produto:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
 
     db.delete(produto)
     db.commit()
 
-    return {"detail": "Produto deletado com sucesso"}
+    return {"message": "Produto deletado com sucesso"}
 
 @app.get("/produtos")
 def listar_produtos(db: Session = Depends(get_db)):
@@ -55,17 +58,23 @@ def listar_produtos(db: Session = Depends(get_db)):
 
 @app.get("/produtos/{nome}")
 def buscar_produto_por_nome(nome: str, db: Session = Depends(get_db)):
+
     produto = db.query(Produtos).filter(Produtos.name == nome).first()
+    
     if not produto:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
 
     return {"id": produto.id, "nome": produto.name, "categoria_id": produto.categoria_id}
 
 
+
+
 # Endpoints para categorias
 
 @app.post("/categorias", status_code=201)
 def criar_categoria(categoria: CategoriaCreate, db: Session = Depends(get_db)):
+    """Cria uma nova categoria no banco de dados. Não confere se a categoria já existe, porque o nome da categoria é único no schema."""
+
     categoria = Categorias(name=categoria.name)
     db.add(categoria)
     db.commit()
@@ -75,6 +84,7 @@ def criar_categoria(categoria: CategoriaCreate, db: Session = Depends(get_db)):
 
 @app.delete("/categorias/{categoria_name}")
 def excluir_categoria(categoria_name: str, db: Session = Depends(get_db)):
+
     categoria = db.query(Categorias).filter(Categorias.name == categoria_name).first()
     if not categoria:
         raise HTTPException(status_code=404, detail="Categoria não encontrada")
@@ -86,7 +96,7 @@ def excluir_categoria(categoria_name: str, db: Session = Depends(get_db)):
     db.delete(categoria)
     db.commit()
 
-    return {"detail": "Categoria deletada com sucesso"}
+    return {"message": "Categoria deletada com sucesso"}
 
 @app.get("/categorias")
 def listar_categorias(db: Session = Depends(get_db)):
@@ -94,14 +104,14 @@ def listar_categorias(db: Session = Depends(get_db)):
     categorias = db.query(Categorias).all()
 
     if not categorias:
-        raise HTTPException(status_code=404, detail="Nenhuma categoria encontrada")
+        return []
 
     return [{"id": categoria.id, "nome": categoria.name} for categoria in categorias]
 
 @app.get("/categorias/{nome}")
 def buscar_categoria_por_nome(nome: str, db: Session = Depends(get_db)):
     categoria = db.query(Categorias).filter(Categorias.name == nome).first()
-    
+
     if not categoria:
         raise HTTPException(status_code=404, detail="Categoria não encontrada")
 

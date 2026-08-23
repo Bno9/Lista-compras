@@ -1,6 +1,5 @@
 from fastapi.testclient import TestClient
 from app.main import app
-import pytest
 
 client = TestClient(app)
 
@@ -31,7 +30,7 @@ def test_excluir_categoria(override_get_db):
     assert response.status_code == 200
 
     data = response.json()
-    assert data["detail"] == "Categoria deletada com sucesso"
+    assert data["message"] == "Categoria deletada com sucesso"
 
 def test_excluir_categoria_com_produtos(override_get_db):
     # Cria uma categoria

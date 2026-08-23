@@ -1,8 +1,9 @@
 from fastapi.testclient import TestClient
 from app.main import app
-import pytest
 
 client = TestClient(app)
+
+# Todos produtos precisam ter uma categoria, então primeiro criamos a categoria e depois o produto.
 
 def test_criar_produto(override_get_db):
     response = client.post(
@@ -29,7 +30,6 @@ def test_criar_produto(override_get_db):
     assert "id" in data
 
 def test_deletar_produto(override_get_db):
-    #Cria uma categoria para poder criar o produto
     response = client.post(
         "/categorias",
         json={"name": "Ferramentas"}
@@ -52,7 +52,7 @@ def test_deletar_produto(override_get_db):
     assert response.status_code == 200
 
     data = response.json()
-    assert data["detail"] == "Produto deletado com sucesso"
+    assert data["message"] == "Produto deletado com sucesso"
 
 def test_deletar_produto_inexistente(override_get_db):
     response = client.delete("/produtos/999")

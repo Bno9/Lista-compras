@@ -3,7 +3,6 @@ from sqlalchemy import StaticPool, create_engine
 from sqlalchemy.orm import sessionmaker
 from app.database import Base, get_db
 from app.main import app as fastapi_app
-import app.models
 
 TEST_DATABASE_URL = "sqlite://"
 
@@ -21,7 +20,6 @@ TestingSessionLocal = sessionmaker(
 
 @pytest.fixture
 def db():   
-    
     Base.metadata.create_all(bind=engine)
 
     db = TestingSessionLocal()
