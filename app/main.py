@@ -68,7 +68,6 @@ def buscar_produto_por_nome(nome: str, db: Session = Depends(get_db)):
 
 
 
-
 # Endpoints para categorias
 
 @app.post("/categorias", status_code=201)
@@ -110,9 +109,10 @@ def listar_categorias(db: Session = Depends(get_db)):
 
 @app.get("/categorias/{nome}")
 def buscar_categoria_por_nome(nome: str, db: Session = Depends(get_db)):
+    
     categoria = db.query(Categorias).filter(Categorias.name == nome).first()
 
     if not categoria:
         raise HTTPException(status_code=404, detail="Categoria não encontrada")
 
-    return {"id": categoria.id, "nome": categoria.name}
+    return {"id": categoria.id, "nome": categoria.name, "produtos": [{"id": produto.id, "nome": produto.name} for produto in categoria.produtos]}
