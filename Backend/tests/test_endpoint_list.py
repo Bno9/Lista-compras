@@ -38,7 +38,9 @@ def test_salvar_produto_lista(override_get_db, criar_produto_teste):
     )
 
     data = response.json()
-    assert data["message"] == f"Produto alicate salvo na lista"
+
+    assert response.status_code == 201
+    assert data["message"] == "Produto salvo na lista"
 
 def test_retornar_lista(override_get_db):
     response = client.get(
@@ -46,6 +48,8 @@ def test_retornar_lista(override_get_db):
     )
 
     data = response.json()
+
+    assert response.status_code == 200
     assert type(data["message"]) == list
     assert data is not None
 
@@ -61,6 +65,7 @@ def test_atualizar_quantidade_lista(override_get_db, criar_produto_teste):
     
     data = response.json()
 
+    assert response.status_code == 200
     assert data["message"] == "Quantidade do produto atualizada"
 
 def test_excluir_produto_lista(override_get_db, criar_produto_teste):
@@ -72,4 +77,5 @@ def test_excluir_produto_lista(override_get_db, criar_produto_teste):
     
     data = response.json()
 
-    assert data["message"] == "Produto removido da lista com sucesso"
+    assert response.status_code == 200
+    assert data["message"] == "Produto removido da lista"

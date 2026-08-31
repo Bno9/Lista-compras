@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import get_db
-from models import Categorias, Produtos
+from models import Categorias, Produtos, ItemLista
 from pydantic import BaseModel
 
 
@@ -11,6 +11,10 @@ class CategoriaCreate(BaseModel):
 class ProdutoCreate(BaseModel):
     name: str
     categoria: str
+
+class Lista(BaseModel):
+    id_produto = int
+    quantidade = int
 
 app = FastAPI()
 
@@ -119,3 +123,52 @@ def buscar_categoria_por_nome(nome: str, db: Session = Depends(get_db)):
 
 
 
+# Endpoints lista
+
+
+@app.get("/lista")
+def retornar_lista(db: Session = Depends(get_db)):
+
+    lista = db.query(ItemLista).all()
+    
+    return lista
+
+
+@app.post("/lista", status_code=201)
+def adicionar_produto(produto: Lista, db: Session = Depends(get_db)):
+    
+    item = ItemLista(produto_id=produto.id_produto, quantidade = produto.quantidade)
+
+    db.add(ItemLista)
+    db.commit()
+    db.refresh()
+
+    return {"message": "Produto salvo na lista"}
+
+@app.put("/lista/{produto_id}")
+def atualizar_produto_lista(produto: Lista, produto_id, db: Session = Depends(get_db)):
+    
+    item = db.query(ItemLista).filter(ItemLista.produto_id == produto_id).first()
+
+    if not item:
+        raise HTTPException(status_code=404, detail="Item não existe na lista")
+    
+    item.quantidade = produto.quantidade
+
+    db.commit()
+    db.refresh()
+
+    return {"message": "Quantidade do produto atualizada"}
+
+@app.delete("/lista/{produto_id}")
+def deletar_produto_lista(produto_id, db: Session = Depends(get_db)):
+    
+    item = db.query(ItemLista).filter(ItemLista.produto_id == produto_id).first()
+
+    if not item:
+        raise HTTPException(status_code=404, detail="Item não existe na lista")
+    
+    db.delete(item)
+    db.commit()
+
+    return {"message": "Produto removido da lista"}
