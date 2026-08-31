@@ -13,8 +13,8 @@ class ProdutoCreate(BaseModel):
     categoria: str
 
 class Lista(BaseModel):
-    id_produto = int
-    quantidade = int
+    id_produto: int
+    quantidade: int
 
 app = FastAPI()
 
@@ -131,22 +131,45 @@ def retornar_lista(db: Session = Depends(get_db)):
 
     lista = db.query(ItemLista).all()
     
-    return lista
+    return {"produtos": [
+        {
+            "id": item.produto.id, 
+            "nome": item.produto.nome, 
+            "categoria": item.produto.categoria.name,
+            "quantidade": item.quantidade
+        }
+        for item in lista]}
 
 
 @app.post("/lista", status_code=201)
 def adicionar_produto(produto: Lista, db: Session = Depends(get_db)):
+
+    produto_obj = db.query(Produtos).filter(Produtos.id == produto.id_produto).first()
+
+    if not produto_obj:
+        raise HTTPException(
+            status_code=404,
+            detail="Produto não encontrado"
+    )
+
+    item_existente = db.query(ItemLista).filter(ItemLista.produto_id == produto.id_produto).first()
+
+    if item_existente:
+        raise HTTPException(
+            status_code=400,
+            detail="Produto já está na lista. Atualize a quantidade"
+        )
     
     item = ItemLista(produto_id=produto.id_produto, quantidade = produto.quantidade)
 
-    db.add(ItemLista)
+    db.add(item)
     db.commit()
-    db.refresh()
+    db.refresh(item)
 
     return {"message": "Produto salvo na lista"}
 
 @app.put("/lista/{produto_id}")
-def atualizar_produto_lista(produto: Lista, produto_id, db: Session = Depends(get_db)):
+def atualizar_produto_lista(produto: Lista, produto_id: int, db: Session = Depends(get_db)):
     
     item = db.query(ItemLista).filter(ItemLista.produto_id == produto_id).first()
 
@@ -156,12 +179,12 @@ def atualizar_produto_lista(produto: Lista, produto_id, db: Session = Depends(ge
     item.quantidade = produto.quantidade
 
     db.commit()
-    db.refresh()
+    db.refresh(item)
 
     return {"message": "Quantidade do produto atualizada"}
 
 @app.delete("/lista/{produto_id}")
-def deletar_produto_lista(produto_id, db: Session = Depends(get_db)):
+def deletar_produto_lista(produto_id: int, db: Session = Depends(get_db)):
     
     item = db.query(ItemLista).filter(ItemLista.produto_id == produto_id).first()
 
