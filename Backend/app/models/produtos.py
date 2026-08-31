@@ -13,3 +13,7 @@ class Produtos(Base):
     categoria: Mapped["Categorias"] = relationship(
         back_populates="produto"
     )
+
+    itens_lista: Mapped[list["ItemLista"]] = relationship(
+        back_populates="produto"
+    )

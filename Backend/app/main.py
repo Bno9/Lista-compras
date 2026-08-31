@@ -116,3 +116,6 @@ def buscar_categoria_por_nome(nome: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Categoria não encontrada")
 
     return {"id": categoria.id, "nome": categoria.name, "produtos": [{"id": produto.id, "nome": produto.name} for produto in categoria.produto]}
+
+
+
