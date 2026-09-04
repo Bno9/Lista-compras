@@ -78,15 +78,16 @@ Além de facilitar a minha vida, também acabo facilitando a vida do comprador, 
 O banco de dados utiliza um modelo relacional com os seguintes esquemas:
 
 Categorias
-├── id: primary key
-└── nome: unique
+
+id: primary key 
+nome: unique
 
 Produtos
-├── id: primary key
-├── nome
-└── categoria_id
-└── cod_barras (futuramente)
-└── image_url (futuramente)
+id: primary key
+nome
+categoria_id: foreign key
+cod_barras (futuramente)
+image_url (futuramente)
 
 Um produto pertence a uma categoria, e uma categoria a vários produtos, estabelecendo uma relação 1:N
 
