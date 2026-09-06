@@ -1,15 +1,22 @@
 import { useState } from 'react'
-import { createContext } from 'react'
+import ListaContext from './context/ListaContext'
 
-const ListaContext = createContext(null)
+import Lista from './components/Lista'
+import Cadastro from './components/Cadastro'
+import Produtos from './components/Produtos'
+
+import './app.css'
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [lista, setLista] = useState([{ id: 1, nome: 'Produto 1', quantidade: 10 }, { id: 2, nome: 'Produto 2', quantidade: 5 }])
 
   return (
-    <>
-    
-    </>
+    <ListaContext.Provider value={{ lista, setLista }}>
+      <Lista />
+      <Cadastro />
+      <Produtos />
+    </ListaContext.Provider>
   )
 }
 
