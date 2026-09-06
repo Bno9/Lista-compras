@@ -4,6 +4,19 @@ import ListaContext from "../context/ListaContext"
 function Lista() {
   const { lista, setLista } = useContext(ListaContext)
 
+  function RemoverLista(id) {
+    fetch(`http://127.0.0.1:5000/lista/${id}`, {
+      method: 'DELETE'
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Erro ao remover o produto')
+        }
+        setLista((prevLista) => prevLista.filter((item) => item.id !== id))
+      })
+      .catch((error) => console.error('Erro ao remover o produto:', error))
+  }
+
   return (
     <section className="w-full max-w-md mx-auto p-4">
       
@@ -34,7 +47,7 @@ function Lista() {
                 {item.quantidade}
               </span>
 
-              <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => setLista((prevLista) => prevLista.filter((i) => i.id !== item.id))}>
+              <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => RemoverLista(item.id)}>
                 Remover
               </button>
             </li>

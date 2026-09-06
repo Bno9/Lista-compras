@@ -6,7 +6,7 @@ function Produtos() {
 
   return (
     <div>
-
+      <h2 className="flex justify-center font-bold uppercase">Lista de Produtos</h2>
     </div>
   )
 }
