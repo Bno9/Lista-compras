@@ -8,7 +8,7 @@ function ModalProduto({ fechar }) {
 
         data.categoria_id = parseInt(data.categoria_id)
 
-        fetch('http://localhost:3000/produtos', {
+        fetch('http://127.0.0.1:5000/produtos', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -81,7 +81,7 @@ function ModalProduto({ fechar }) {
                 </div>
 
                 <div className="flex gap-3">
-                    
+
                     <button
                         type="submit"
                         className="w-full rounded-lg bg-blue-500 px-4 py-2 font-bold text-white transition hover:bg-blue-600"

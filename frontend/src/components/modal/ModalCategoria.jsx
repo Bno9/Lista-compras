@@ -5,7 +5,7 @@ function ModalCategoria({ fechar }) {
         const formData = new FormData(event.target)
         const data = Object.fromEntries(formData)
 
-        fetch('http://localhost:3000/categorias', {
+        fetch('http://127.0.0.1:5000/categorias', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
