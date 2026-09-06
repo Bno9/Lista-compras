@@ -30,10 +30,13 @@ function ModalProduto({ fechar }) {
             },
             body: JSON.stringify(data)
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Produto cadastrado com sucesso:', data)
-        })
+        .then(response =>{ 
+            if (!response.ok) {
+                    throw new Error(`HTTP code: ${response.status}`)
+                }
+
+                console.log(response.json())
+            })
         .catch(error => {
             console.error('Erro ao cadastrar produto:', error)
         })

@@ -1,16 +1,16 @@
-function ModalCategoria({ fechar }) {
-    function cadastrarCategoria(event) {
+function ModalExcluirCategoria({ fechar }) {
+
+    function deletarCategoria(event) {
         event.preventDefault()
 
         const formData = new FormData(event.target)
         const data = Object.fromEntries(formData)
 
-        fetch('http://127.0.0.1:5000/categorias', {
-            method: 'POST',
+        fetch(`http://127.0.0.1:5000/categorias/${data.name}`, {
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data)
         })
         .then(response =>{ 
             if (!response.ok) {
@@ -18,9 +18,9 @@ function ModalCategoria({ fechar }) {
                 }
 
                 console.log(response.json())
-            })  
+            })
         .catch(error => {
-            console.error('Erro ao cadastrar categoria:', error)
+            console.error('Erro ao excluir categoria:', error)
         })
     }
 
@@ -28,15 +28,15 @@ function ModalCategoria({ fechar }) {
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 p-4">
 
             <form
-                onSubmit={cadastrarCategoria}
+                onSubmit={deletarCategoria}
                 className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
             >
 
                 <h2 className="mb-6 text-center text-2xl font-bold">
-                    Cadastrar Categoria
+                    Excluir Categoria
                 </h2>
 
-                <div className="mb-6 flex flex-col gap-2">
+                <div className="mb-4 flex flex-col gap-2">
                     <label
                         htmlFor="nome-categoria"
                         className="font-medium"
@@ -54,11 +54,12 @@ function ModalCategoria({ fechar }) {
                 </div>
 
                 <div className="flex gap-3">
+
                     <button
                         type="submit"
                         className="w-full rounded-lg bg-blue-500 px-4 py-2 font-bold text-white transition hover:bg-blue-600"
                     >
-                        Cadastrar
+                        Deletar
                     </button>
 
                     <button
@@ -76,4 +77,4 @@ function ModalCategoria({ fechar }) {
     )
 }
 
-export default ModalCategoria
+export default ModalExcluirCategoria

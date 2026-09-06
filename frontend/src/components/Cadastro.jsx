@@ -2,6 +2,8 @@ import { useState } from 'react'
 
 import ModalProduto from './modal/ModalProduto'
 import ModalCategoria from './modal/ModalCategoria'
+import ModalExcluirCategoria from './modal/ModalExcluirCategoria'
+import ModalExcluirProduto from './modal/ModalExcluirProduto'
 
 function Cadastro() {
   const [modal, setModal] = useState(null)
@@ -31,12 +33,42 @@ function Cadastro() {
         Cadastrar Categoria
       </button>
 
+       <button
+        onClick={() =>
+          modal === 'excluirCategoria'
+            ? setModal(null)
+            : setModal('excluirCategoria')
+        }
+        className="w-full rounded-lg bg-red-500 px-5 py-3 font-bold text-white shadow transition hover:bg-red-600 active:scale-95 sm:w-auto"
+      >
+        Excluir Categoria
+      </button>
+
+       <button
+        onClick={() =>
+          modal === 'excluirProduto'
+            ? setModal(null)
+            : setModal('excluirProduto')
+        }
+        className="w-full rounded-lg bg-red-500 px-5 py-3 font-bold text-white shadow transition hover:bg-red-600 active:scale-95 sm:w-auto"
+      >
+        Excluir Produto
+      </button>
+
       {modal === "produto" && (
         <ModalProduto fechar={() => setModal(null)}/>
       )}
 
       {modal === "categoria" && (
         <ModalCategoria fechar={() => setModal(null)}/>
+      )}
+
+      {modal === "excluirCategoria" && (
+        <ModalExcluirCategoria fechar={() => setModal(null)}/>
+      )}
+
+      {modal === "excluirProduto" && (
+        <ModalExcluirProduto fechar={() => setModal(null)}/>
       )}
 
     </div>

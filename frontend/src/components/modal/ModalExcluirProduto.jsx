@@ -1,64 +1,69 @@
-function ModalCategoria({ fechar }) {
-    function cadastrarCategoria(event) {
+function ModalExcluirProduto({ fechar }) {
+
+    function deletarProduto(event) {
         event.preventDefault()
 
         const formData = new FormData(event.target)
         const data = Object.fromEntries(formData)
 
-        fetch('http://127.0.0.1:5000/categorias', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response =>{ 
-            if (!response.ok) {
+        fetch(`http://127.0.0.1:5000/produtos/${data.name}`)
+            .then(response => response.json())
+            .then(produto => {
+                return fetch(`http://127.0.0.1:5000/produtos/${produto.id}`, {
+                    method: 'DELETE'
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
                     throw new Error(`HTTP code: ${response.status}`)
                 }
 
-                console.log(response.json())
-            })  
-        .catch(error => {
-            console.error('Erro ao cadastrar categoria:', error)
-        })
+                return response.json()
+            })
+            .then(data => {
+                console.log("Produto excluído:", data)
+            })
+            .catch(error => {
+                console.error('Erro ao excluir produto:', error)
+            })
     }
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 p-4">
 
             <form
-                onSubmit={cadastrarCategoria}
+                onSubmit={deletarProduto}
                 className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
             >
 
                 <h2 className="mb-6 text-center text-2xl font-bold">
-                    Cadastrar Categoria
+                    Excluir Produto
                 </h2>
 
-                <div className="mb-6 flex flex-col gap-2">
+                <div className="mb-4 flex flex-col gap-2">
                     <label
-                        htmlFor="nome-categoria"
+                        htmlFor="nome-produto"
                         className="font-medium"
                     >
-                        Nome da categoria
+                        Nome do produto
                     </label>
 
                     <input
-                        id="nome-categoria"
+                        id="nome-produto"
                         type="text"
                         name="name"
-                        placeholder="Digite o nome da categoria"
+                        placeholder="Digite o nome do produto"
                         className="rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                     />
                 </div>
 
                 <div className="flex gap-3">
+
                     <button
                         type="submit"
                         className="w-full rounded-lg bg-blue-500 px-4 py-2 font-bold text-white transition hover:bg-blue-600"
                     >
-                        Cadastrar
+                        Deletar
                     </button>
 
                     <button
@@ -76,4 +81,4 @@ function ModalCategoria({ fechar }) {
     )
 }
 
-export default ModalCategoria
+export default ModalExcluirProduto
