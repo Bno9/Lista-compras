@@ -14,6 +14,13 @@ function Lista() {
       <div className="max-h-75 overflow-y-auto border rounded-lg p-3">
         <ul className="space-y-2">
 
+          <div className="flex justify-between gap-4">
+            <span className="font-bold uppercase">Nome</span>
+            <span className="font-bold uppercase">Quantidade</span>
+            <span></span>
+            <span></span>
+          </div>
+
           {lista.map((item) => (
             <li
               key={item.id}
