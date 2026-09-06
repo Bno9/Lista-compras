@@ -1,4 +1,19 @@
+import { useState, useEffect } from "react"
+
 function ModalProduto({ fechar }) {
+
+    const [categorias, setCategorias] = useState([])
+
+    useEffect(() => {
+        fetch("http://127.0.0.1:5000/categorias")
+            .then(response => response.json())
+            .then(data => {
+                setCategorias(data)
+            })
+            .catch(error => {
+                console.error("Erro ao buscar categorias:", error)
+            })
+    }, [])
     
     function cadastrarProduto(event) {
         event.preventDefault()
@@ -47,7 +62,7 @@ function ModalProduto({ fechar }) {
                     <input
                         id="nome-produto"
                         type="text"
-                        name="nome"
+                        name="name"
                         placeholder="Digite o nome do produto"
                         className="rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                     />
@@ -63,20 +78,16 @@ function ModalProduto({ fechar }) {
 
                     <select
                         id="categoria-produto"
-                        name="categoria_id"
+                        name="categoria"
                         className="rounded-lg border border-gray-300 bg-white px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                     >
-                        <option value="">
-                            Selecione uma categoria
-                        </option>
 
-                        <option value="1">
-                            Ferramentas
-                        </option>
+                        {categorias.map((categoria) => (
+                            <option key={categoria.id} value={categoria.nome}>
+                                {categoria.nome}
+                            </option>
+                        ))}
 
-                        <option value="2">
-                            Limpeza
-                        </option>
                     </select>
                 </div>
 

@@ -44,7 +44,7 @@ function ModalCategoria({ fechar }) {
                     <input
                         id="nome-categoria"
                         type="text"
-                        name="nome"
+                        name="name"
                         placeholder="Digite o nome da categoria"
                         className="rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                     />
