@@ -1,4 +1,4 @@
-function ModalCategoria() {
+function ModalCategoria({ fechar }) {
     function cadastrarCategoria(event) {
         event.preventDefault()
 
@@ -21,31 +21,56 @@ function ModalCategoria() {
         })
     }
 
+    return (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 p-4">
 
-  return (
-    <div>
-      
-      <form onSubmit={cadastrarCategoria}>
+            <form
+                onSubmit={cadastrarCategoria}
+                className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
+            >
 
-        <label htmlFor="nome-categoria">
-            Nome da categoria
-        </label>
+                <h2 className="mb-6 text-center text-2xl font-bold">
+                    Cadastrar Categoria
+                </h2>
 
-        <input
-            id="nome-categoria"
-            type="text"
-            name="nome"
-            placeholder="Digite o nome da categoria"
-        />
+                <div className="mb-6 flex flex-col gap-2">
+                    <label
+                        htmlFor="nome-categoria"
+                        className="font-medium"
+                    >
+                        Nome da categoria
+                    </label>
 
-        <button type="submit">
-            Cadastrar
-        </button>
+                    <input
+                        id="nome-categoria"
+                        type="text"
+                        name="nome"
+                        placeholder="Digite o nome da categoria"
+                        className="rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                    />
+                </div>
 
-      </form>
+                <div className="flex gap-3">
+                    <button
+                        type="submit"
+                        className="w-full rounded-lg bg-blue-500 px-4 py-2 font-bold text-white transition hover:bg-blue-600"
+                    >
+                        Cadastrar
+                    </button>
 
-    </div>
-  )
+                    <button
+                        className="w-full rounded-lg bg-red-500 px-4 py-2  font-bold text-white transition hover:bg-red-600" 
+                        onClick={fechar}
+                    >
+                        Fechar
+                    </button>
+                
+                </div>
+
+            </form>
+
+        </div>
+    )
 }
 
 export default ModalCategoria

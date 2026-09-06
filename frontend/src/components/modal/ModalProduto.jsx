@@ -1,4 +1,4 @@
-function ModalProduto() {
+function ModalProduto({ fechar }) {
     
     function cadastrarProduto(event) {
         event.preventDefault()
@@ -24,43 +24,84 @@ function ModalProduto() {
         })
     }
 
-  return (
-    <div>
-      
-      <form onSubmit={cadastrarProduto}>
+    return (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 p-4">
 
-        <label htmlFor="nome-produto">
-            Nome do produto
-        </label>
+            <form
+                onSubmit={cadastrarProduto}
+                className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
+            >
 
-        <input
-            id="nome-produto"
-            type="text"
-            name="nome"
-            placeholder="Digite o nome do produto"
-        />
+                <h2 className="mb-6 text-center text-2xl font-bold">
+                    Cadastrar Produto
+                </h2>
 
-        <label htmlFor="categoria-produto">
-            Categoria
-        </label>
+                <div className="mb-4 flex flex-col gap-2">
+                    <label
+                        htmlFor="nome-produto"
+                        className="font-medium"
+                    >
+                        Nome do produto
+                    </label>
 
-        <select
-            id="categoria-produto"
-            name="categoria_id"
-        >
-            <option value="">Selecione uma categoria</option>
-            <option value="1">Ferramentas</option>
-            <option value="2">Limpeza</option>
-        </select>
+                    <input
+                        id="nome-produto"
+                        type="text"
+                        name="nome"
+                        placeholder="Digite o nome do produto"
+                        className="rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                    />
+                </div>
 
-        <button type="submit">
-            Cadastrar
-        </button>
+                <div className="mb-6 flex flex-col gap-2">
+                    <label
+                        htmlFor="categoria-produto"
+                        className="font-medium"
+                    >
+                        Categoria
+                    </label>
 
-       </form>
+                    <select
+                        id="categoria-produto"
+                        name="categoria_id"
+                        className="rounded-lg border border-gray-300 bg-white px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                    >
+                        <option value="">
+                            Selecione uma categoria
+                        </option>
 
-    </div>
-  )
+                        <option value="1">
+                            Ferramentas
+                        </option>
+
+                        <option value="2">
+                            Limpeza
+                        </option>
+                    </select>
+                </div>
+
+                <div className="flex gap-3">
+                    
+                    <button
+                        type="submit"
+                        className="w-full rounded-lg bg-blue-500 px-4 py-2 font-bold text-white transition hover:bg-blue-600"
+                    >
+                        Cadastrar
+                    </button>
+
+                    <button
+                        className="w-full rounded-lg bg-red-500 px-4 py-2  font-bold text-white transition hover:bg-red-600" 
+                        onClick={fechar}
+                    >
+                        Fechar
+                    </button>
+                
+                </div>
+
+            </form>
+
+        </div>
+    )
 }
 
 export default ModalProduto
