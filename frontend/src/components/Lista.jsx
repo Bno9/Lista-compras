@@ -46,7 +46,7 @@ return (
             key={item.id}
             className="grid grid-cols-[1fr_auto_auto] items-center gap-3 text-lg"
           >
-            <span className="uppercase truncate">
+            <span className="uppercase">
               {item.nome}
             </span>
 
