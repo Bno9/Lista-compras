@@ -29,6 +29,12 @@ function Produtos() {
     .then(response => response.json())
     .then(data => {
       console.log("Produto adicionado à lista:", data)
+      if (data.message) {
+        setLista((prevLista) => prevLista.map((item) =>
+          item.id === produto.id ? { ...item, quantidade: item.quantidade + (quantidades[produto.id] || 1) } : item
+        ))
+        return
+      }
       setLista((prevLista) => [...prevLista, data])
     })
   }
