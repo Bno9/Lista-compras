@@ -44,9 +44,9 @@ return (
         {lista.map((item) => (
           <li
             key={item.id}
-            className="grid grid-cols-[1fr_auto_auto] items-center gap-3 text-lg"
+            className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3 text-lg"
           >
-            <span className="uppercase">
+            <span className="uppercase min-w-0 wrap-break-word">
               {item.nome}
             </span>
 
