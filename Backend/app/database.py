@@ -25,6 +25,6 @@ def get_db():
     finally:
         db.close()
 
-import models #importa os modelos que estão no __init__.py para criar as tabelas
+from . import models #importa os modelos que estão no __init__.py para criar as tabelas
     
 Base.metadata.create_all(bind=engine)

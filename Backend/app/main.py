@@ -1,8 +1,9 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from database import get_db
-from models import Categorias, Produtos, ItemLista
+from sqlalchemy import func
+from .database import get_db
+from .models import Categorias, Produtos, ItemLista
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -71,7 +72,7 @@ def listar_produtos(db: Session = Depends(get_db)):
 @app.get("/produtos/{nome}")
 def buscar_produto_por_nome(nome: str, db: Session = Depends(get_db)):
 
-    produto = db.query(Produtos).filter(Produtos.name == nome).first()
+    produto = db.query(Produtos).filter(func.lower(Produtos.name) == nome.lower()).first()
     
     if not produto:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
@@ -163,7 +164,7 @@ def adicionar_produto(produto: Lista, db: Session = Depends(get_db)):
     item_existente = db.query(ItemLista).filter(ItemLista.produto_id == produto.id_produto).first()
 
     if item_existente:
-        item.quantidade += produto.quantidade
+        item_existente.quantidade += produto.quantidade
         db.commit()
         db.refresh(item_existente)
         return {"message": "Quantidade do produto atualizada na lista"}
