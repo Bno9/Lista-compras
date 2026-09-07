@@ -9,6 +9,7 @@ function ModalProduto({ fechar }) {
             .then(response => response.json())
             .then(data => {
                 setCategorias(data)
+                fechar()
             })
             .catch(error => {
                 console.error("Erro ao buscar categorias:", error)

@@ -18,6 +18,7 @@ function ModalCategoria({ fechar }) {
                 }
 
                 console.log(response.json())
+                fechar()
             })  
         .catch(error => {
             console.error('Erro ao cadastrar categoria:', error)

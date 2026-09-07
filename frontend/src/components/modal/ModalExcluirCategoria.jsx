@@ -24,6 +24,7 @@ function ModalExcluirCategoria({ fechar }) {
                 }
 
                 console.log(response.json())
+                fechar()
             })
         .catch(error => {
             console.error('Erro ao excluir categoria:', error)

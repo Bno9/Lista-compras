@@ -24,6 +24,7 @@ function ModalExcluirProduto({ fechar }) {
             })
             .then(data => {
                 console.log("Produto excluído:", data)
+                fechar()
             })
             .catch(error => {
                 console.error('Erro ao excluir produto:', error)
