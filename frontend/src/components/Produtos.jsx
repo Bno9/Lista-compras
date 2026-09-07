@@ -3,6 +3,7 @@ import ListaContext from "../context/ListaContext"
 
 function Produtos() {
   const [categorias, setCategorias] = useState([])
+  const [busca, setBusca] = useState("")
   const [quantidades, setQuantidades] = useState({})
   const { lista, setLista } = useContext(ListaContext)
 
@@ -32,6 +33,15 @@ function Produtos() {
     })
   }
 
+  const categoriasFiltradas = categorias
+  .map((categoria) => ({
+    ...categoria,
+    produtos: categoria.produtos.filter((produto) =>
+      produto.nome.toLowerCase().includes(busca.toLowerCase())
+    )
+  }))
+  .filter((categoria) => categoria.produtos.length > 0)
+
 return (
   <section className="w-full max-w-6xl mx-auto p-4">
 
@@ -39,11 +49,15 @@ return (
       Produtos cadastrados
     </h2>
 
-    <input type="text" placeholder="Buscar produto..." className="lg:w-280 w-50 border rounded-lg px-2 py-1 m-1 text-center focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+    <input type="text" placeholder="Buscar produto..." className="lg:w-280 w-50 border rounded-lg px-2 py-1 m-1 text-center focus:outline-none focus:ring-2 focus:ring-blue-400"
+    onChange={(e) => {
+      setBusca(e.target.value)
+    }}
+        />
 
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-      {categorias.map((categoria) => (
+      {categoriasFiltradas.map((categoria) => (
         <div
           key={categoria.id}
           className="bg-white border rounded-xl shadow-sm p-4"
