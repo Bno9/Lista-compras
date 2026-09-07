@@ -10,7 +10,7 @@ function Produtos() {
   const { lista, setLista } = useContext(ListaContext)
 
   function AdicionarProdutoLista(produto){
-    fetch("http://127.0.0.1:5000/lista", {
+    fetch(`${import.meta.env.VITE_API_URL}/lista`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

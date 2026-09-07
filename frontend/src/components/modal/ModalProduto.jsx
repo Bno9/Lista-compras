@@ -5,7 +5,7 @@ function ModalProduto({ fechar }) {
     const [categorias, setCategorias] = useState([])
 
     useEffect(() => {
-        fetch("http://127.0.0.1:5000/categorias")
+        fetch(`${import.meta.env.VITE_API_URL}/categorias`)
             .then(response => response.json())
             .then(data => {
                 setCategorias(data)
@@ -23,7 +23,7 @@ function ModalProduto({ fechar }) {
 
         data.categoria_id = parseInt(data.categoria_id)
 
-        fetch('http://127.0.0.1:5000/produtos', {
+        fetch(`${import.meta.env.VITE_API_URL}/produtos`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

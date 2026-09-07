@@ -8,10 +8,10 @@ function ModalExcluirProduto({ fechar }) {
 
         console.log(data)
 
-        fetch(`http://127.0.0.1:5000/produtos/${data.name}`)
+        fetch(`${import.meta.env.VITE_API_URL}/produtos/${data.name}`)
             .then(response => response.json())
             .then(produto => {
-                return fetch(`http://127.0.0.1:5000/produtos/${produto.id}`, {
+                return fetch(`${import.meta.env.VITE_API_URL}/produtos/${produto.id}`, {
                     method: 'DELETE'
                 })
             })

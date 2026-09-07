@@ -12,7 +12,7 @@ function ModalExcluirCategoria({ fechar }) {
 
         console.log(data)
 
-        fetch(`http://127.0.0.1:5000/categorias/${data.name}`, {
+        fetch(`${import.meta.env.VITE_API_URL}/categorias/${data.name}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
