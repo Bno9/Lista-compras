@@ -17,6 +17,14 @@ function Lista() {
       .catch((error) => console.error('Erro ao remover o produto:', error))
   }
 
+  const listaPorCategoria = lista.reduce((acc, item) => {
+    if (!acc[item.categoria]) {
+      acc[item.categoria] = []
+    }
+    acc[item.categoria].push(item)
+    return acc
+  }, {})
+
 return (
   <section className="w-full max-w-md mx-auto p-4">
 
@@ -41,27 +49,37 @@ return (
           <span></span>
         </li>
 
-        {lista.map((item) => (
-          <li
-            key={item.id}
-            className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3 text-lg"
-          >
-            <span className="uppercase min-w-0 wrap-break-word">
-              {item.nome}
-            </span>
+      {Object.entries(listaPorCategoria).map(([categoria, itens]) => (
+        <div key={categoria}>
 
-            <span className="font-bold text-center mx-2 w-16">
-              {item.quantidade}
-            </span>
+          <h2 className="text-xl font-bold uppercase mb-2">
+            {categoria}
+          </h2>
 
-            <button
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition"
-              onClick={() => RemoverLista(item.id)}
+          {itens.map((item) => (
+            <li
+              key={item.id}
+              className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3 text-lg"
             >
-              Remover
-            </button>
-          </li>
-        ))}
+              <span className="uppercase min-w-0 wrap-break-word">
+                {item.nome}
+              </span>
+
+              <span className="font-bold text-center mx-2 w-16">
+                {item.quantidade}
+              </span>
+
+              <button
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition"
+                onClick={() => RemoverLista(item.id)}
+              >
+                Remover
+              </button>
+            </li>
+          ))}
+
+        </div>
+      ))}
 
       </ul>
 
