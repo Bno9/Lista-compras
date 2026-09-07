@@ -1,10 +1,16 @@
+import { useContext } from "react"
+import CategoriasContext from "../../context/CategoriasContext"
+
 function ModalExcluirCategoria({ fechar }) {
+    const {categorias} = useContext(CategoriasContext)
 
     function deletarCategoria(event) {
         event.preventDefault()
 
         const formData = new FormData(event.target)
         const data = Object.fromEntries(formData)
+
+        console.log(data)
 
         fetch(`http://127.0.0.1:5000/categorias/${data.name}`, {
             method: 'DELETE',
@@ -44,13 +50,28 @@ function ModalExcluirCategoria({ fechar }) {
                         Nome da categoria
                     </label>
 
-                    <input
-                        id="nome-categoria"
-                        type="text"
-                        name="name"
-                        placeholder="Digite o nome da categoria"
-                        className="rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-                    />
+                    <select name="name"    
+                    className="w-full
+                            rounded-lg
+                            border border-gray-300
+                            bg-white
+                            px-4 py-2
+                            text-gray-700
+                            shadow-sm
+                            outline-none
+                            transition
+                            focus:border-blue-500
+                            focus:ring-2
+                            focus:ring-blue-400
+                            ">
+                        {categorias.map((categoria) => (
+                            <option key={categoria.id} value={categoria.nome}>
+                                {categoria.nome}
+                            </option>
+                        ))}
+                    </select>
+
+
                 </div>
 
                 <div className="flex gap-3">

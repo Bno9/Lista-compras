@@ -6,6 +6,8 @@ function ModalExcluirProduto({ fechar }) {
         const formData = new FormData(event.target)
         const data = Object.fromEntries(formData)
 
+        console.log(data)
+
         fetch(`http://127.0.0.1:5000/produtos/${data.name}`)
             .then(response => response.json())
             .then(produto => {

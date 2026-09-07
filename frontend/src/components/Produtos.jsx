@@ -1,19 +1,13 @@
-import { useContext, useState, useEffect } from "react"
+import { useContext, useState } from "react"
 import ListaContext from "../context/ListaContext"
+import CategoriasContext from "../context/CategoriasContext"
 
 function Produtos() {
-  const [categorias, setCategorias] = useState([])
+  const {categorias} = useContext(CategoriasContext)
+
   const [busca, setBusca] = useState("")
   const [quantidades, setQuantidades] = useState({})
   const { lista, setLista } = useContext(ListaContext)
-
-  useEffect(() => {
-    fetch("http://127.0.0.1:5000/categorias")
-        .then(response => response.json())
-        .then(data => {
-            setCategorias(data)
-        })
-  }, [])
 
   function AdicionarProdutoLista(produto){
     fetch("http://127.0.0.1:5000/lista", {
@@ -94,7 +88,7 @@ return (
                   onChange={(e) =>
                     setQuantidades({
                       ...quantidades,
-                      [produto.id]: e.target.value
+                      [produto.id]: parseInt(e.target.value) || 1
                     })
                   }
                     className="w-20 border rounded-lg px-2 py-1 text-center focus:outline-none focus:ring-2 focus:ring-blue-400"
