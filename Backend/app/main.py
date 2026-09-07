@@ -1,8 +1,19 @@
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from database import get_db
 from models import Categorias, Produtos, ItemLista
 from pydantic import BaseModel
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class CategoriaCreate(BaseModel):
@@ -15,9 +26,6 @@ class ProdutoCreate(BaseModel):
 class Lista(BaseModel):
     id_produto: int
     quantidade: int
-
-app = FastAPI()
-
 
 
 # Endpoints para produtos
@@ -109,7 +117,7 @@ def listar_categorias(db: Session = Depends(get_db)):
     if not categorias:
         return []
 
-    return [{"id": categoria.id, "nome": categoria.name} for categoria in categorias]
+    return [{"id": categoria.id, "nome": categoria.name, "produtos": [{"id": produto.id, "nome": produto.name} for produto in categoria.produto]} for categoria in categorias]
 
 @app.get("/categorias/{nome}")
 def buscar_categoria_por_nome(nome: str, db: Session = Depends(get_db)):
@@ -134,7 +142,7 @@ def retornar_lista(db: Session = Depends(get_db)):
     return {"produtos": [
         {
             "id": item.produto.id, 
-            "nome": item.produto.nome, 
+            "nome": item.produto.name, 
             "categoria": item.produto.categoria.name,
             "quantidade": item.quantidade
         }
@@ -155,18 +163,23 @@ def adicionar_produto(produto: Lista, db: Session = Depends(get_db)):
     item_existente = db.query(ItemLista).filter(ItemLista.produto_id == produto.id_produto).first()
 
     if item_existente:
-        raise HTTPException(
-            status_code=400,
-            detail="Produto já está na lista. Atualize a quantidade"
-        )
+        item.quantidade += produto.quantidade
+        db.commit()
+        db.refresh(item_existente)
+        return {"message": "Quantidade do produto atualizada na lista"}
     
-    item = ItemLista(produto_id=produto.id_produto, quantidade = produto.quantidade)
+    item = ItemLista(produto_id = produto.id_produto, quantidade = produto.quantidade)
 
     db.add(item)
     db.commit()
     db.refresh(item)
 
-    return {"message": "Produto salvo na lista"}
+    return { 
+            "id": item.produto.id, 
+            "nome": item.produto.name, 
+            "categoria": item.produto.categoria.name,
+            "quantidade": item.quantidade
+        }
 
 @app.put("/lista/{produto_id}")
 def atualizar_produto_lista(produto: Lista, produto_id: int, db: Session = Depends(get_db)):

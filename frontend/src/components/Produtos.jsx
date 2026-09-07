@@ -3,6 +3,7 @@ import ListaContext from "../context/ListaContext"
 
 function Produtos() {
   const [categorias, setCategorias] = useState([])
+  const [quantidades, setQuantidades] = useState({})
   const { lista, setLista } = useContext(ListaContext)
 
   useEffect(() => {
@@ -19,44 +20,86 @@ function Produtos() {
       headers: {
         "Content-Type": "application/json"
       },
-      body: {"id_produto": produto.id,
-            "quantidade": produto.quantidade ? produto.quantidade : 1
-      }
+      body: JSON.stringify({
+        "id_produto": produto.id,
+        "quantidade": quantidades[produto.id] || 1
+      })
     })
     .then(response => response.json())
     .then(data => {
-      setLista((prevLista) => [...prevLista, ...data])
+      console.log("Produto adicionado à lista:", data)
+      setLista((prevLista) => [...prevLista, data])
     })
   }
 
-  return (
-    <div>
-      <h2 className="flex justify-center font-bold uppercase">Produtos cadastrados</h2>
+return (
+  <section className="w-full max-w-6xl mx-auto p-4">
+
+    <h2 className="text-2xl text-center font-bold uppercase mb-6">
+      Produtos cadastrados
+    </h2>
+
+    <input type="text" placeholder="Buscar produto..." className="lg:w-280 w-50 border rounded-lg px-2 py-1 m-1 text-center focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
       {categorias.map((categoria) => (
-        <div key={categoria.id} className="mb-4">
+        <div
+          key={categoria.id}
+          className="bg-white border rounded-xl shadow-sm p-4"
+        >
 
-          <h3 className="font-bold">{categoria.nome}</h3>
+          <h3 className="text-lg text-gray-500 font-bold uppercase border-b pb-2 mb-3 ">
+            {categoria.nome}
+          </h3>
 
-          <ul className="list-disc pl-5">
-            
+          <ul className="space-y-3">
+
             {categoria.produtos.map((produto) => (
-              <li key={produto.id} className="flex justify-between items-center">
+              <li
+                key={produto.id}
+                className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+              >
 
-                <span>{produto.nome}</span>
+                <span className="font-medium uppercase">
+                  {produto.nome}
+                </span>
 
-                <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-                  onClick={() => AdicionarProdutoLista(produto)}
-                >Adicionar à lista</button>
+                <div className="flex gap-2">
+
+                <input
+                  type="number"
+                  placeholder="Qtd."
+                  value={quantidades[produto.id] || ""}
+                  onChange={(e) =>
+                    setQuantidades({
+                      ...quantidades,
+                      [produto.id]: e.target.value
+                    })
+                  }
+                    className="w-20 border rounded-lg px-2 py-1 text-center focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  />
+
+                  <button
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded-lg transition"
+                    onClick={() =>
+                      AdicionarProdutoLista(produto, quantidades[produto.id] || 1)
+                    }
+                  >
+                    Adicionar
+                  </button>
+
+                </div>
 
               </li>
             ))}
+
           </ul>
         </div>
       ))}
+
     </div>
-  )
-}
+  </section>
+)}
 
 export default Produtos
