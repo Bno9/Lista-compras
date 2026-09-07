@@ -8,7 +8,7 @@ function ModalExcluirProduto({ fechar }) {
 
         console.log(data)
 
-        fetch(`${import.meta.env.VITE_API_URL}/produtos/${data.name}`)
+        fetch(`${import.meta.env.VITE_API_URL}/produtos/${encodeURIComponent(data.name)}`)
             .then(response => response.json())
             .then(produto => {
                 return fetch(`${import.meta.env.VITE_API_URL}/produtos/${produto.id}`, {

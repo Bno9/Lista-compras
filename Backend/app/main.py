@@ -71,7 +71,7 @@ def listar_produtos(db: Session = Depends(get_db)):
 
 @app.get("/produtos/{nome}")
 def buscar_produto_por_nome(nome: str, db: Session = Depends(get_db)):
-
+    
     produto = db.query(Produtos).filter(func.lower(Produtos.name) == nome.lower()).first()
     
     if not produto:
