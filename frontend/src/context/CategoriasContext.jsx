@@ -6,7 +6,7 @@ function CategoriasProvider({ children }) {
   const [categorias, setCategorias] = useState([])
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/categorias")
+    fetch(`${import.meta.env.VITE_API_URL}/categorias`)
       .then(response => response.json())
       .then(data => {
         setCategorias(data)
