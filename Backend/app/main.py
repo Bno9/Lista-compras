@@ -34,6 +34,8 @@ class Lista(BaseModel):
 @app.post("/produtos", status_code=201)
 def criar_produto(produto: ProdutoCreate, db: Session = Depends(get_db)):
 
+    produto.name = produto.name.strip()
+
     categoria_obj = db.query(Categorias).filter(Categorias.name == produto.categoria).first()
 
     if not categoria_obj:
@@ -71,6 +73,8 @@ def listar_produtos(db: Session = Depends(get_db)):
 
 @app.get("/produtos/{nome}")
 def buscar_produto_por_nome(nome: str, db: Session = Depends(get_db)):
+
+    nome = nome.strip()
     
     produto = db.query(Produtos).filter(func.lower(Produtos.name) == nome.lower()).first()
     
@@ -86,6 +90,8 @@ def buscar_produto_por_nome(nome: str, db: Session = Depends(get_db)):
 @app.post("/categorias", status_code=201)
 def criar_categoria(categoria: CategoriaCreate, db: Session = Depends(get_db)):
     """Cria uma nova categoria no banco de dados. Não confere se a categoria já existe, porque o nome da categoria é único no schema."""
+
+    categoria.name = categoria.name.strip()
 
     categoria = Categorias(name=categoria.name)
     db.add(categoria)
