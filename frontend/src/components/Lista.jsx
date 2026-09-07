@@ -61,7 +61,7 @@ return (
               key={item.id}
               className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3 text-lg"
             >
-              <span className="uppercase min-w-0 wrap-break-word">
+              <span className="uppercase min-w-0 wrap-break-word text-gray-700">
                 {item.nome}
               </span>
 
@@ -70,7 +70,7 @@ return (
               </span>
 
               <button
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition"
+                className="bg-red-500 hover:bg-red-700 text-white font-bold my-1 py-2 px-4 rounded transition"
                 onClick={() => RemoverLista(item.id)}
               >
                 Remover
