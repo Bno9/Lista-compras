@@ -17,47 +17,57 @@ function Lista() {
       .catch((error) => console.error('Erro ao remover o produto:', error))
   }
 
-  return (
-    <section className="w-full max-w-md mx-auto p-4">
-      
-      <h1 className="text-2xl font-bold text-center mb-4">
-        Lista de Produtos
-      </h1>
+return (
+  <section className="w-full max-w-md mx-auto p-4">
 
-      <div className="max-h-75 overflow-y-auto border rounded-lg p-3">
-        <ul className="space-y-2">
+    <h1 className="text-2xl font-bold text-center mb-4">
+      Lista de Produtos
+    </h1>
 
-          <div className="flex justify-between gap-4">
-            <span className="font-bold uppercase">Nome</span>
-            <span className="font-bold uppercase">Quantidade</span>
-            <span></span>
-            <span></span>
-          </div>
+    <div className="max-h-75 overflow-y-auto border rounded-lg p-3">
 
-          {lista.map((item) => (
-            <li
-              key={item.id}
-              className="flex justify-between items-center text-lg"
+      <ul className="space-y-2">
+
+        <li className="grid grid-cols-[1fr_auto_auto] items-center gap-3 border-b pb-2">
+          <span className="font-bold uppercase">
+            Nome
+          </span>
+
+          {/*fiz gambiarra pra alinhar o texto do Qtd. com a quantidade */}
+          <span className="font-bold uppercase mx-30"> 
+            Qtd.
+          </span>
+
+          <span></span>
+        </li>
+
+        {lista.map((item) => (
+          <li
+            key={item.id}
+            className="grid grid-cols-[1fr_auto_auto] items-center gap-3 text-lg"
+          >
+            <span className="uppercase truncate">
+              {item.nome}
+            </span>
+
+            <span className="font-bold text-center mx-2 w-16">
+              {item.quantidade}
+            </span>
+
+            <button
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition"
+              onClick={() => RemoverLista(item.id)}
             >
-              <span className="uppercase">
-                {item.nome}
-              </span>
+              Remover
+            </button>
+          </li>
+        ))}
 
-              <span className="font-bold">
-                {item.quantidade}
-              </span>
+      </ul>
 
-              <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => RemoverLista(item.id)}>
-                Remover
-              </button>
-            </li>
-          ))}
+    </div>
 
-        </ul>
-      </div>
-
-    </section>
-  )
-}
+  </section>
+)}
 
 export default Lista
