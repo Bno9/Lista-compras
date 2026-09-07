@@ -75,7 +75,7 @@ return (
                 className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
               >
 
-                <span className="font-medium uppercase">
+                <span className="font-medium uppercase min-w-0 wrap-break-word">
                   {produto.nome}
                 </span>
 
