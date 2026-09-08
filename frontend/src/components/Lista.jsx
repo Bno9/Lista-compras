@@ -61,13 +61,23 @@ return (
               key={item.id}
               className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3 text-lg"
             >
-              <span className="uppercase min-w-0 wrap-break-word text-gray-700">
+              <span className={`uppercase min-w-0 wrap-break-word text-gray-700 ${item.concluido ? "line-through" : ""}`}>
                 {item.nome}
               </span>
 
               <span className="font-bold text-center mx-2 w-16">
                 {item.quantidade}
               </span>
+            
+              <input type="checkbox" id={item.id} checked={item.concluido} onChange={() => {
+                setLista((prevLista) =>
+                  prevLista.map((produto) =>
+                    produto.id === item.id
+                      ? { ...produto, concluido: !produto.concluido }
+                      : produto
+                  )
+                )
+              }} />
 
               <button
                 className="bg-red-500 hover:bg-red-700 text-white font-bold my-1 py-2 px-4 rounded transition"

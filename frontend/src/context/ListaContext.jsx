@@ -10,7 +10,15 @@ function ListaProvider({ children }) {
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/lista`)
       .then((response) => response.json())
-      .then((data) => setLista(data.produtos))
+      .then((data) => {
+
+      const produtos = data.produtos.map(item => ({
+      ...item,
+      concluido: false
+      }))
+
+        setLista(produtos)
+      })
       .catch((error) => console.error('Erro ao buscar a lista:', error))
   }, [])
 
