@@ -50,7 +50,7 @@ return (
         </li>
 
       {Object.entries(listaPorCategoria).map(([categoria, itens]) => (
-        <div key={categoria}>
+        <div key={categoria} className="border-b pb-2 mb-2 py-5">
 
           <h2 className="text-xl font-bold uppercase mb-2">
             {categoria}
@@ -59,19 +59,19 @@ return (
           {itens.map((item) => (
             <li
               key={item.id}
-              className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3 text-lg"
+              className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3 space-y-5 text-lg"
             >
 
               <span className={item.concluido ? "line-through text-red-600" : ""}>
 
-                <span className={"uppercase min-w-0 wrap-break-word text-gray-700"}>
+                <span className={"uppercase min-w-0 wrap-break-word text-gray-600" + (item.concluido ? "text-red-600" : "")}>
                   {item.nome}
                 </span>
 
                 <span className="font-bold text-center mx-2 w-16">
                   {item.quantidade}
                 </span> 
-                
+
               </span>
               
               <input type="checkbox" id={item.id} checked={item.concluido} className="h-5 w-5 cursor-pointer accent-green-600" onChange={() => {
