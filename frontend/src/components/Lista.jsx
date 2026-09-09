@@ -32,7 +32,7 @@ return (
       Lista de Produtos
     </h1>
 
-    <div className="max-h-75 overflow-y-auto border rounded-lg p-3">
+    <div className="max-h-200 overflow-y-auto border rounded-lg p-3">
 
       <ul className="space-y-2">
 
@@ -62,7 +62,8 @@ return (
               className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3 text-lg"
             >
 
-              <span className={item.concluido ? "line-through" : ""}>
+              <span className={item.concluido ? "line-through text-red-600" : ""}>
+
                 <span className={"uppercase min-w-0 wrap-break-word text-gray-700"}>
                   {item.nome}
                 </span>
@@ -70,6 +71,7 @@ return (
                 <span className="font-bold text-center mx-2 w-16">
                   {item.quantidade}
                 </span> 
+                
               </span>
               
               <input type="checkbox" id={item.id} checked={item.concluido} className="h-5 w-5 cursor-pointer accent-green-600" onChange={() => {

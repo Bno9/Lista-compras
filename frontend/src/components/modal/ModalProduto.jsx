@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react"
+import { useContext, useEffect } from "react"
+import CategoriasContext from "../../context/CategoriasContext"
 
 function ModalProduto({ fechar }) {
-
-    const [categorias, setCategorias] = useState([])
+    
+    const { categorias, setCategorias } = useContext(CategoriasContext)
 
     useEffect(() => {
         fetch(`${import.meta.env.VITE_API_URL}/categorias`)
