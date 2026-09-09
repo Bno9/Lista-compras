@@ -49,14 +49,16 @@ return (
           <span></span>
         </li>
 
-      {Object.entries(listaPorCategoria).map(([categoria, itens]) => (
+      {Object.entries(listaPorCategoria).map(([categoria, itens]) => (  
         <div key={categoria} className="border-b pb-2 mb-2 py-5">
 
           <h2 className="text-xl font-bold uppercase mb-2">
             {categoria}
           </h2>
 
-          {itens.map((item) => (
+          {[...itens]
+            .sort((a, b) => a.nome.localeCompare(b.nome))
+            .map((item) => (
             <li
               key={item.id}
               className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3 space-y-5 text-lg"
