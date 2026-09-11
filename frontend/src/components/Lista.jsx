@@ -1,10 +1,15 @@
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import ListaContext from "../context/ListaContext"
+import ModalConfirmarExclusao from "./modal/ModalConfirmarExclusao"
 
 function Lista() {
   const { lista, setLista } = useContext(ListaContext)
+  const [produtoSelecionado, setprodutoSelecionado] = useState(null)
 
   function RemoverLista(id) {
+    //função padronizada que envia a informação para 2 endpoints diferentes
+    setprodutoSelecionado(null)
+
     fetch(`${import.meta.env.VITE_API_URL}/lista/${id}`, {
       method: 'DELETE'
     })
@@ -27,6 +32,10 @@ function Lista() {
 
 return (
   <section className="w-full max-w-md mx-auto p-4">
+
+    {produtoSelecionado != null && (
+      <ModalConfirmarExclusao fechar={() => setprodutoSelecionado(null)} RemoverLista={RemoverLista} produtoSelecionado={produtoSelecionado}/>
+    )}
 
     <h1 className="text-2xl font-bold text-center mb-4">
       Lista de Produtos
@@ -70,7 +79,7 @@ return (
                   {item.nome}
                 </span>
 
-                <span className="font-bold text-center mx-2 w-16">
+                <span className="font-bold px-5 mx-2 w-16">
                   {item.quantidade}
                 </span> 
 
@@ -88,7 +97,7 @@ return (
 
               <button
                 className="bg-red-500 hover:bg-red-600 text-white font-semibold text-sm py-1.5 px-3 rounded-md cursor-pointer transition-colors"
-                onClick={() => RemoverLista(item.id)}
+                onClick={() => setprodutoSelecionado(item.id)}
               >
                 Remover
               </button>
@@ -102,6 +111,9 @@ return (
 
     </div>
 
+      <button className="bg-red-500 hover:bg-red-600 text-white font-semibold text-sm m-1 py-3 px-5 rounded-md cursor-pointer transition-colors"
+              onClick={() => setprodutoSelecionado("todos")}
+              >Apagar lista</button>
   </section>
 )}
 
