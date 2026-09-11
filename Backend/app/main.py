@@ -17,10 +17,10 @@ app.add_middleware(
 )
 
 
-class CategoriaCreate(BaseModel):
+class CategoriaBase(BaseModel):
     name: str
 
-class ProdutoCreate(BaseModel):
+class ProdutoBase(BaseModel):
     name: str
     categoria: str
 
@@ -32,7 +32,7 @@ class Lista(BaseModel):
 # Endpoints para produtos
 
 @app.post("/produtos", status_code=201)
-def criar_produto(produto: ProdutoCreate, db: Session = Depends(get_db)):
+def criar_produto(produto: ProdutoBase, db: Session = Depends(get_db)):
 
     produto.name = produto.name.strip()
 
@@ -47,6 +47,25 @@ def criar_produto(produto: ProdutoCreate, db: Session = Depends(get_db)):
     db.refresh(produto)
 
     return {"name": produto.name, 'categoria': categoria_obj.name, "id": produto.id}
+
+@app.put("/produtos/{produto_id}")
+def atualizar_categoria(produto: ProdutoBase, db: Session = Depends(get_db)):
+
+    item = db.query(Produtos).filter(Produtos.id == produto.id).first()
+
+    if not item:
+        raise HTTPException(status_code=404, detail="Produto não encontrado")
+
+    categoria = db.query(Categorias).filter(Categorias.name == produto.categoria).first()
+
+    if not categoria:
+        raise  HTTPException(status_code=404, detail="Categoria inexistente")
+
+    
+    item.name = produto.name
+    item.categoria_id = categoria.id
+    db.commit()
+    db.refresh()
 
 @app.delete("/produtos/{produto_id}")
 def excluir_produto(produto_id: int, db: Session = Depends(get_db)):
@@ -88,7 +107,7 @@ def buscar_produto_por_nome(nome: str, db: Session = Depends(get_db)):
 # Endpoints para categorias
 
 @app.post("/categorias", status_code=201)
-def criar_categoria(categoria: CategoriaCreate, db: Session = Depends(get_db)):
+def criar_categoria(categoria: CategoriaBase, db: Session = Depends(get_db)):
     """Cria uma nova categoria no banco de dados. Não confere se a categoria já existe, porque o nome da categoria é único no schema."""
 
     categoria.name = categoria.name.strip()
@@ -99,6 +118,20 @@ def criar_categoria(categoria: CategoriaCreate, db: Session = Depends(get_db)):
     db.refresh(categoria)
 
     return {"id": categoria.id, "nome": categoria.name}
+
+@app.put("/categorias/{categoria_name}")
+def atualizar_categoria(categoria: CategoriaBase, db: Session = Depends(get_db)):
+
+    categoria.name = categoria.name.strip()
+
+    categoriaDB = db.query(Categorias).filter(Categorias.name == categoria.name).first()
+
+    if not categoriaDB:
+        raise HTTPException(status_code=404, detail="Categoria não encontrada")
+    
+    categoriaDB.name = categoria.name
+    db.commit()
+    db.refresh()
 
 @app.delete("/categorias/{categoria_name}")
 def excluir_categoria(categoria_name: str, db: Session = Depends(get_db)):
