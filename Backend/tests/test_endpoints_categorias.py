@@ -1,7 +1,4 @@
-from fastapi.testclient import TestClient
-from app.main import app
-
-client = TestClient(app)
+from tests.fixtures.testClient import client
 
 def test_criar_categoria(override_get_db):
     response = client.post(
