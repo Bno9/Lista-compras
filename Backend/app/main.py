@@ -215,3 +215,11 @@ def deletar_produto_lista(produto_id: int, db: Session = Depends(get_db)):
     db.commit()
 
     return {"message": "Produto removido da lista"}
+
+@app.delete("/lista/todos")
+def deletar_todos_produtos_lista(db: Session = Depends(get_db)):
+
+    db.query(ItemLista).delete()
+    db.commit()
+
+    return {"message": "Lista apagada"}
