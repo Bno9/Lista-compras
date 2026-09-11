@@ -1,4 +1,5 @@
 from tests.fixtures.testClient import client
+from tests.fixtures.produto_teste import criar_categoria_teste
 
 def test_criar_categoria(override_get_db):
     response = client.post(
@@ -53,3 +54,16 @@ def test_excluir_categoria_com_produtos(override_get_db):
 
     data = response.json()
     assert data["detail"] == "Não é possível deletar uma categoria que possui produtos"
+
+def test_atualizar_categoria(override_get_db, criar_categoria_teste):
+    categoria = criar_categoria_teste
+    categoria_id = categoria[1]
+
+    response = client.put(f"/categoria/{categoria_id}",
+               json={
+                   "nome": "Ferramentas2"
+               })
+    
+    data = response.json()
+
+    assert data["message"] == "Nome da categoria alterado para Ferramentas2"

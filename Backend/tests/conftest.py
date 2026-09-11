@@ -3,6 +3,7 @@ from sqlalchemy import StaticPool, create_engine
 from sqlalchemy.orm import sessionmaker
 from app.database import Base, get_db
 from app.main import app as fastapi_app
+from tests.fixtures.produto_teste import criar_categoria_teste #import para o pytest reconhecer a fixture
 
 TEST_DATABASE_URL = "sqlite://"
 
