@@ -12,7 +12,6 @@ function Produtos() {
   const [produtoSelecionado, setProdutoSelecionado] = useState(null)
 
   function EditarProduto(produto, nomeNovo, categoria) {
-
     fetch(`${import.meta.env.VITE_API_URL}/produtos/${produto.id}`, {
       method: "PUT",
       headers: {
@@ -31,13 +30,44 @@ function Produtos() {
         return response.json()
       })
       .then(data => {
-        console.log("Produto atualizado:", data)
+
+        const produtoAtualizado = {
+          ...produto,
+          nome: data.name
+        }
+
+        setCategorias(prevCategorias => {
+
+          // Remove o produto da categoria antiga
+          const categoriasAtualizadas = prevCategorias.map(cat => ({
+            ...cat,
+            produtos: cat.produtos.filter(
+              p => p.id !== produto.id
+            )
+          }))
+
+          // Coloca o produto na nova categoria
+          return categoriasAtualizadas.map(cat =>
+            cat.nome === data.categoria
+              ? {
+                  ...cat,
+                  produtos: [
+                    ...cat.produtos,
+                    produtoAtualizado
+                  ]
+                }
+              : cat
+          )
+        })
+
+        // Fecha o modal
+        setProdutoSelecionado(null)
       })
       .catch(error => {
         console.error("Erro ao atualizar produto:", error)
       })
   }
-
+  
   function AdicionarProdutoLista(produto){
     fetch(`${import.meta.env.VITE_API_URL}/lista`, {
       method: "POST",

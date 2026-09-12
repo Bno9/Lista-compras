@@ -49,9 +49,9 @@ def criar_produto(produto: ProdutoBase, db: Session = Depends(get_db)):
     return {"name": produto.name, 'categoria': categoria_obj.name, "id": produto.id}
 
 @app.put("/produtos/{produto_id}")
-def atualizar_categoria(produto: ProdutoBase, db: Session = Depends(get_db)):
+def atualizar_categoria(produto: ProdutoBase, produto_id: int, db: Session = Depends(get_db)):
 
-    item = db.query(Produtos).filter(Produtos.id == produto.id).first()
+    item = db.query(Produtos).filter(Produtos.id == produto_id).first()
 
     if not item:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
@@ -65,7 +65,9 @@ def atualizar_categoria(produto: ProdutoBase, db: Session = Depends(get_db)):
     item.name = produto.name
     item.categoria_id = categoria.id
     db.commit()
-    db.refresh()
+    db.refresh(item)
+
+    return {"name": produto.name, "categoria": categoria.name}
 
 @app.delete("/produtos/{produto_id}")
 def excluir_produto(produto_id: int, db: Session = Depends(get_db)):
