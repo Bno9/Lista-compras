@@ -1,20 +1,41 @@
-import { use, useContext, useState } from "react"
+import { useContext, useState } from "react"
 import ListaContext from "../context/ListaContext"
 import CategoriasContext from "../context/CategoriasContext"
-import MoedalEditarProduto from "./modal/ModalEditarProduto"
+import ModalEditarProduto from "./modal/ModalEditarProduto"
 
 function Produtos() {
-  const {categorias} = useContext(CategoriasContext)
+  const {categorias, setCategorias} = useContext(CategoriasContext)
   const { lista, setLista } = useContext(ListaContext)
 
   const [busca, setBusca] = useState("")
   const [quantidades, setQuantidades] = useState({})
-  const [modal, setModal] = useState(false)
+  const [produtoSelecionado, setProdutoSelecionado] = useState(null)
 
-  function EditarProduto(id, categoria, nome){
-    setModal(true)
+  function EditarProduto(produto, nomeNovo, categoria) {
 
-    modal == true && (<MoedalEditarProduto fechar={() => setModal(false)} id={id} categoria={categoria} nome={nome}></MoedalEditarProduto>)
+    fetch(`${import.meta.env.VITE_API_URL}/produtos/${produto.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: nomeNovo,
+        categoria: categoria
+      })
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Erro HTTP: ${response.status}`)
+        }
+
+        return response.json()
+      })
+      .then(data => {
+        console.log("Produto atualizado:", data)
+      })
+      .catch(error => {
+        console.error("Erro ao atualizar produto:", error)
+      })
   }
 
   function AdicionarProdutoLista(produto){
@@ -52,6 +73,9 @@ function Produtos() {
 
 return (
   <section className="w-full max-w-6xl mx-auto p-4">
+
+
+    {produtoSelecionado != null && (<ModalEditarProduto fechar={() => setProdutoSelecionado(null)} selecionado={produtoSelecionado} EditarProduto={EditarProduto}></ModalEditarProduto>)}
 
     <h2 className="text-2xl text-center font-bold uppercase mb-6">
       Produtos cadastrados
@@ -112,7 +136,7 @@ return (
                   </button>
 
                   <button   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded-lg transition"
-                    onClick={() => EditarProduto(id=produto.id, categoria=produto.categoria, nome=produto.nome)
+                    onClick={() => setProdutoSelecionado([produto, categoria])
                     }
                   >
                     Editar
