@@ -4,6 +4,7 @@ import ModalProduto from './modal/ModalProduto'
 import ModalCategoria from './modal/ModalCategoria'
 import ModalExcluirCategoria from './modal/ModalExcluirCategoria'
 import ModalExcluirProduto from './modal/ModalExcluirProduto'
+import ModalEditarCategoria from './modal/ModalEditarCategoria'
 
 function Cadastro() {
   const [modal, setModal] = useState(null)
@@ -17,7 +18,7 @@ function Cadastro() {
             ? setModal(null)
             : setModal('produto')
         }
-        className="w-full rounded-lg bg-blue-500 px-5 py-3 font-bold text-white shadow transition hover:bg-blue-600 active:scale-95 sm:w-auto"
+        className="w-full rounded-lg bg-green-500 px-5 py-3 font-bold text-white shadow transition hover:bg-green-600 active:scale-95 sm:w-auto"
       >
         Cadastrar Produto
       </button>
@@ -31,6 +32,17 @@ function Cadastro() {
         className="w-full rounded-lg bg-green-500 px-5 py-3 font-bold text-white shadow transition hover:bg-green-600 active:scale-95 sm:w-auto"
       >
         Cadastrar Categoria
+      </button>
+
+      <button
+        onClick={() =>
+          modal === 'editarCategoria'
+            ? setModal(null)
+            : setModal('editarCategoria')
+        }
+        className="w-full rounded-lg bg-blue-500 px-5 py-3 font-bold text-white shadow transition hover:bg-blue-600 active:scale-95 sm:w-auto"
+      >
+        Editar Categoria
       </button>
 
        <button
@@ -70,6 +82,11 @@ function Cadastro() {
       {modal === "excluirProduto" && (
         <ModalExcluirProduto fechar={() => setModal(null)}/>
       )}
+
+      {modal === "editarCategoria" && (
+        <ModalEditarCategoria fechar={() => setModal(null)}/>
+      )}
+
 
     </div>
   )
