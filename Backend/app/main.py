@@ -122,18 +122,20 @@ def criar_categoria(categoria: CategoriaBase, db: Session = Depends(get_db)):
     return {"id": categoria.id, "nome": categoria.name}
 
 @app.put("/categorias/{categoria_name}")
-def atualizar_categoria(categoria: CategoriaBase, db: Session = Depends(get_db)):
+def atualizar_categoria(categoria: CategoriaBase, categoria_name: str, db: Session = Depends(get_db)):
 
     categoria.name = categoria.name.strip()
 
-    categoriaDB = db.query(Categorias).filter(Categorias.name == categoria.name).first()
+    categoriaDB = db.query(Categorias).filter(Categorias.name == categoria_name).first()
 
     if not categoriaDB:
         raise HTTPException(status_code=404, detail="Categoria não encontrada")
     
     categoriaDB.name = categoria.name
     db.commit()
-    db.refresh()
+    db.refresh(categoriaDB)
+
+    return {"message": "Nome da categoria atualizado"}
 
 @app.delete("/categorias/{categoria_name}")
 def excluir_categoria(categoria_name: str, db: Session = Depends(get_db)):
