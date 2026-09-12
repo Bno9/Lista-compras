@@ -1,13 +1,21 @@
-import { useContext, useState } from "react"
+import { use, useContext, useState } from "react"
 import ListaContext from "../context/ListaContext"
 import CategoriasContext from "../context/CategoriasContext"
+import MoedalEditarProduto from "./modal/ModalEditarProduto"
 
 function Produtos() {
   const {categorias} = useContext(CategoriasContext)
+  const { lista, setLista } = useContext(ListaContext)
 
   const [busca, setBusca] = useState("")
   const [quantidades, setQuantidades] = useState({})
-  const { lista, setLista } = useContext(ListaContext)
+  const [modal, setModal] = useState(false)
+
+  function EditarProduto(id, categoria, nome){
+    setModal(true)
+
+    modal == true && (<MoedalEditarProduto fechar={() => setModal(false)} id={id} categoria={categoria} nome={nome}></MoedalEditarProduto>)
+  }
 
   function AdicionarProdutoLista(produto){
     fetch(`${import.meta.env.VITE_API_URL}/lista`, {
@@ -101,6 +109,13 @@ return (
                     }
                   >
                     Adicionar
+                  </button>
+
+                  <button   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded-lg transition"
+                    onClick={() => EditarProduto(id=produto.id, categoria=produto.categoria, nome=produto.nome)
+                    }
+                  >
+                    Editar
                   </button>
 
                 </div>
